@@ -114,6 +114,8 @@ def xml_file_2_tuple(xml_file):
 	root = tree.getroot()
 	nctid = root.find('id_info').find('nct_id').text	### nctid: 'NCT00000102'
 	study_type = root.find('study_type').text 
+	completion_date = root.find('completion_date')
+	start_date = root.find('start_date')
 	if study_type != 'Interventional':
 		return ("non-Interventional",) 
 
@@ -176,7 +178,7 @@ def xml_file_2_tuple(xml_file):
 	conditions = [i.lower() for i in conditions]
 	drugs = [i.lower() for i in drug_interventions]
 
-	return nctid, status.lower(), why_stop.lower(), label, phase.lower(), conditions, drugs, criteria
+	return nctid, status.lower(), why_stop.lower(), label, phase.lower(), conditions, drugs, criteria, completion_date, start_date
 	# return nctid, status.lower(), why_stop.lower(), label, phase.lower(), conditions, drugs, title, criteria, summary
 
 
@@ -188,7 +190,7 @@ def process_all():
 	disease2icd = load_disease2icd() 
 	input_file_lst = get_path_of_all_xml_file()
 	### output 
-	output_file = 'raw_data.csv'
+	output_file = 'raw_data_wtih_time.csv'
 	# iqvia_disease2icd, public_disease2icd = load_disease2icd_pkl() 
 	# iqvia_disease2diseaseset = disease_dict_reorganize(iqvia_disease2icd)
 	# disease2icd = public_disease2icd 
@@ -201,7 +203,7 @@ def process_all():
 	# 			 'title', 'criteria', 'summary']
 	fieldname = ['nctid', 'status', 'why_stop', 'label', 'phase', 
 				 'diseases', 'icdcodes', 'drugs', 'smiless', 
-				 'criteria']
+				 'criteria', 'completion_date', 'start_date']
 	num_noninterventional, num_biologics = 0, 0, 
 	num_nodrug = 0 
 	num_nolabel = 0 
@@ -220,7 +222,7 @@ def process_all():
 				num_biologics += 1
 				continue 
 
-			nctid, status, why_stop, label, phase, conditions, drugs, criteria = result
+			nctid, status, why_stop, label, phase, conditions, drugs, criteria, completion_date, start_date = result
 			# nctid, status, why_stop, label, phase, conditions, drugs, title, criteria, summary = result
 
 			## 0.4 
@@ -239,7 +241,7 @@ def process_all():
 				icdcode_lst.append(icdcode)
 			## 2. drug -> smiles 
 			smiles_lst = []
-			print("drugs ", drugs)
+			# print("drugs ", drugs)
 			for drug in drugs:
 				# drug_all += 1
 				smiles = drug_hit_smiles(drug, drug2smiles)
@@ -270,7 +272,9 @@ def process_all():
 							 'icdcodes': icdcode_lst, \
 							 'drugs':drugs, \
 							 'smiless': smiles_lst, \
-							 'criteria':criteria, })
+							 'criteria':criteria, \
+							 'completion_date': completion_date, \
+							 'start_date': start_date,})
 	t2 = time()
 	# print("disease hit icdcode", disease_hit, "disease all", disease_all, "\n drug hit smiles", drug_hit, "drug all", drug_all)
 	print(str(int((t2-t1)/60)) + " minutes. " + str(data_count) + " data samples. ")
