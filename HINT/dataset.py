@@ -1,4 +1,8 @@
 
+
+# import torch, os, sys
+# torch.manual_seed(0) 
+# sys.path.append('.')
 import pandas as pd
 import torch
 import numpy as np
@@ -1318,22 +1322,26 @@ def repurposing():
     
     def smiless2(x):
         if len(x) == 1 and len(x[0]) < 1:
-            return ['unknown']
+            return "['unknown']"
         elif x == ['']:
-            return ['unknown']
+            return "['unknown']"
         elif x == "['']":
+            return "['unknown']"
+        elif x == "[]" :
             return "['unknown']"
         else:
             return x
     train_icdcode_lst = train_part['icdcodes'].fillna('["unknown"]').tolist()
-    train_smiles_lst = train_part['smiless'].apply(smiless2).fillna('["unknown"]').tolist()
+    train_smiles_lst = train_part['smiless'].fillna('["unknown"]')
+    train_smiles_lst  = train_smiles_lst.apply(smiless2).tolist()
     train_drug_mesh_lst = train_part['intervention_browse/mesh_term'].values.tolist()
     train_disease_mesh_lst = train_part['condition_browse/mesh_term'].values.tolist()
     train_dataset = Repurpose(train_icdcode_lst, train_disease_mesh_lst, train_smiles_lst, train_drug_mesh_lst)
     train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True, collate_fn=Repurpose_collate_fn)
 
     test_icdcode_lst = X_test['icdcodes'].fillna('["unknown"]').tolist()
-    test_smiles_lst = X_test['smiless'].apply(smiless2).fillna('["unknown"]').tolist()
+    test_smiles_lst = X_test['smiless'].fillna('["unknown"]')
+    test_smiles_lst = test_smiles_lst.apply(smiless2).tolist()
     test_drug_mesh_lst = X_test['intervention_browse/mesh_term'].values.tolist()
     test_disease_mesh_lst = X_test['condition_browse/mesh_term'].values.tolist()
     test_dataset = Repurpose(test_icdcode_lst, test_disease_mesh_lst, test_smiles_lst, test_drug_mesh_lst)
@@ -1344,8 +1352,9 @@ def repurposing():
 
 
 if __name__ == '__main__':
-    # X_train, y_train, X_valid, y_valid, X_test, y_test, text_features, hot_features, numerical_features, mesh_term = dose()
-    # print(y_train)
-    train_pairs, valid_pairs, test_pairs = repurposing()
-    print(train_pairs)
+    # # X_train, y_train, X_valid, y_valid, X_test, y_test, text_features, hot_features, numerical_features, mesh_term = dose()
+    # # print(y_train)
+    # train_pairs, valid_pairs, test_pairs = repurposing()
+    repurposing()
+    # print(train_pairs)
     
