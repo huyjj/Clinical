@@ -1,0 +1,23 @@
+==================Test==================
+PR-AUC   mean: 0.3369
+F1       mean: 0.0
+ROC-AUC  mean: 0.3042
+Precision mean: 0.0
+Recall   mean: 0.0
+Accuracy mean: 0.6630
+MAE      mean: 0.0833
+MSE      mean: 0.0293
+RMSE     mean: 0.1712
+Correlat mean: 0.4795
+==================Bootstrap Test==================
+PR-AUC   mean: 0.3386 std: 0.0042
+F1       mean: 0.0 std: 0.0
+ROC-AUC  mean: 0.3036 std: 0.0050
+Precision mean: 0.0 std: 0.0
+Recall   mean: 0.0 std: 0.0
+Accuracy mean: 0.6613 std: 0.0042
+==================Bootstrap Test==================
+MAE      mean: 0.0838 std: 0.0019
+MSE      mean: 0.0299 std: 0.0012
+RMSE     mean: 0.1730 std: 0.0037
+Correlat mean: 0.4808 std: 0.0133

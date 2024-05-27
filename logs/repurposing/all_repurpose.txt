@@ -1,0 +1,5 @@
+==================Test==================
+Hit@50   mean: 0.0
+Hit@10   mean: 0.0
+Hit@5    mean: 0.0
+MeanRank mean: 0.0

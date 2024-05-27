@@ -1,0 +1,14 @@
+==================Test==================
+PR-AUC   mean: 0.4781
+F1       mean: 0.6335
+ROC-AUC  mean: 0.7543
+Precision mean: 0.4857
+Recall   mean: 0.9103
+Accuracy mean: 0.5784
+==================Bootstrap Test==================
+PR-AUC   mean: 0.4137 std: 0.0171
+F1       mean: 0.5845 std: 0.0172
+ROC-AUC  mean: 0.6417 std: 0.0176
+Precision mean: 0.4137 std: 0.0171
+Recall   mean: 0.9969 std: 0.0019
+Accuracy mean: 0.4315 std: 0.0161

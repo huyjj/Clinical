@@ -1,0 +1,10 @@
+==================Test==================
+MAE      mean: 295.47
+MSE      mean: 217408
+RMSE     mean: 466.27
+Correlat mean: 0.6532
+==================Bootstrap Test==================
+MAE      mean: 304.22 std: 4.8690
+MSE      mean: 212002 std: 8816.8
+RMSE     mean: 460.33 std: 9.5474
+Correlat mean: 0.6514 std: 0.0085

@@ -1,0 +1,30 @@
+==================Test==================
+MAE      mean: 0.4411
+MSE      mean: 0.2133
+RMSE     mean: 0.4618
+Correlat mean: 0.5054
+==================Bootstrap Test==================
+MAE      mean: 0.4432 std: 0.0035
+MSE      mean: 0.2154 std: 0.0022
+RMSE     mean: 0.4641 std: 0.0024
+Correlat mean: 0.5106 std: 0.0163
+==================Test==================
+MAE      mean: 0.4430
+MSE      mean: 0.2154
+RMSE     mean: 0.4642
+Correlat mean: 0.5164
+==================Bootstrap Test==================
+MAE      mean: 0.4422 std: 0.0020
+MSE      mean: 0.2140 std: 0.0015
+RMSE     mean: 0.4626 std: 0.0017
+Correlat mean: 0.4942 std: 0.0175
+==================Test==================
+MAE      mean: 0.4430
+MSE      mean: 0.2154
+RMSE     mean: 0.4642
+Correlat mean: 0.5164
+==================Bootstrap Test==================
+MAE      mean: 0.4401 std: 0.0024
+MSE      mean: 0.2127 std: 0.0016
+RMSE     mean: 0.4612 std: 0.0018
+Correlat mean: 0.4972 std: 0.0148
