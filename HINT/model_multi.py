@@ -1144,7 +1144,7 @@ class Repurpose(nn.Sequential):
         self.encoder2interaction_highway_drug = Highway(self.global_embed_size, self.highway_num_layer).to(device)
         self.encoder2interaction_fc_disease = nn.Linear(self.feature_dim, self.global_embed_size).to(device)
         self.encoder2interaction_highway_disease = Highway(self.global_embed_size, self.highway_num_layer).to(device)
-        self.drug2embedding = {}
+
         # self.encoder2interaction_fc = nn.Linear(self.global_embed_size * 2, self.global_embed_size).to(device)
         # self.encoder2interaction_highway = Highway(self.global_embed_size, self.highway_num_layer).to(device)
         # self.pred_nn = nn.Linear(self.global_embed_size, 1)
@@ -1187,7 +1187,7 @@ class Repurpose(nn.Sequential):
         elif sim_func == "dot":
             y = torch.mul(disease_embed, drug_embed).sum(dim=1)
         else:
-            raise ValueError("similarity function only support %s, but got %s" % (["cosine", "dot"], self.sim_func))
+            raise ValueError("similarity function only support %s, but got %s" % (["cosine", "dot"], sim_func))
         y = y / temperature
         return torch.sigmoid(y)
 
@@ -1232,17 +1232,16 @@ class Repurpose(nn.Sequential):
         assert length == len(smiles_lst2) and length == len(icdcode_lst3)
         return nctid_lst, label_lst, smiles_lst2, icdcode_lst3, drug_mesh_lst, disease_mesh_lst, length 
 
-    def generate_predict(self, dataloader):
+    def generate_predict(self, drug2embedding, dataloader):
         list_y_true = []
         list_y_score = []
         whole_loss = 0
         diseases_embeddings = []
         # Main loop
-        for batch_idx, (disease_term_embed, icdcode, drug_term_embed, smiless, disease_term, drug_term, _) in enumerate(tqdm(dataloader)):
+        for batch_idx, (disease_term_embed, icdcode, drug_term_embed, smiless, disease_term, drug_term, _) in enumerate(dataloader):
             # disease_term_embed = disease_term_embed.to(self.device).float()
             # drug_term_embed = drug_term_embed.to(self.device).float()
             disease_embedding = self.forward_get_disease(icdcode, disease_term_embed)
-            print(smiless)
             drug_embedding = self.forward_get_drug(smiless, drug_term_embed)
             output = self.cal_smilarity(drug_embedding, disease_embedding)
 
@@ -1251,7 +1250,7 @@ class Repurpose(nn.Sequential):
 
             diseases_embeddings.append(disease_embedding.detach())
             for i in range(len(drug_term)):
-                self.drug2embedding[drug_term[i]] = drug_embedding[i]
+                drug2embedding[drug_term[i]] = drug_embedding[i]
             list_y_true.extend(drug_term)
 
         diseases_embeddings = torch.cat(diseases_embeddings, dim=0)
@@ -1259,7 +1258,7 @@ class Repurpose(nn.Sequential):
         ranked_drugs = {disease_idx: [] for disease_idx in range(diseases_embeddings.shape[0])}
         # for disease_idx, disease_embedding in enumerate(diseases_embeddings.split(1, dim=0)):
         similarities = []
-        for drug_term, drug_embedding in self.drug2embedding.items():
+        for drug_term, drug_embedding in drug2embedding.items():
             sim = torch.cosine_similarity(diseases_embeddings, drug_embedding.unsqueeze(0), dim=1)
             for disease_idx in range(diseases_embeddings.shape[0]):
                 ranked_drugs[disease_idx].append((drug_term, sim[disease_idx].item()))
@@ -1269,17 +1268,17 @@ class Repurpose(nn.Sequential):
 
         return whole_loss, ranked_drugs, list_y_true
 
-    def bootstrap_test(self, dataloader, sample_num = 20):
+    def bootstrap_test(self, drug2embedding, dataloader, sample_num = 20):
         # if validloader is not None:
         # 	best_threshold = self.select_threshold_for_binary(validloader)
         self.eval()
         best_threshold = 0.5 
-        whole_loss, ranked_drugs, list_y_true = self.generate_predict(dataloader)
+        whole_loss, ranked_drugs, list_y_true = self.generate_predict(drug2embedding, dataloader)
         from HINT.utils import plot_hist
         plt.clf()
         prefix_name = self.save_name.replace('logs/', 'logs/figure/') 
         os.makedirs(prefix_name, exist_ok=True)
-        plot_hist(prefix_name, predict_all, label_all)		
+        # plot_hist(prefix_name, predict_all, label_all)		
         def bootstrap(idx, sample_num):
             from random import choices 
             bootstrap_idx = [choices(idx, k = length) for i in range(sample_num)]
@@ -1310,12 +1309,12 @@ class Repurpose(nn.Sequential):
         self.train() 
         return ranked_drugs, list_y_true
         
-    def test(self, dataloader, return_loss = True, validloader=None):
+    def test(self, drug2embedding, dataloader, return_loss = True, validloader=None):
         # if validloader is not None:
         # 	best_threshold = self.select_threshold_for_binary(validloader)
         self.eval()
         best_threshold = 0.5 
-        whole_loss, ranked_drugs, list_y_true = self.generate_predict(dataloader)
+        whole_loss, ranked_drugs, list_y_true = self.generate_predict(drug2embedding, dataloader)
         self.train()
         if return_loss:
             return whole_loss
@@ -1328,12 +1327,14 @@ class Repurpose(nn.Sequential):
             rank = next((index for index, (drug_term, _) in enumerate(ranked_drug) if drug_term == list_y_true[disease_idx]), None)
             if rank is not None:
                 mean_rank += (index + 1)  # 加1是因为排名通常从1开始计数
+            else:
+                rank = 1000
 
-            if index < 50:
+            if rank < 50:
                 hit_at_50 += 1
-            if index < 10:
+            if rank < 10:
                 hit_at_10 += 1
-            if index < 5:
+            if rank < 5:
                 hit_at_5 += 1
         print2file(self.save_name+'.txt', "==================Test==================")
         print2file(self.save_name+'.txt',  "Hit@50   mean: "+str(hit_at_50 / len(ranked_drugs))[:6])
@@ -1346,14 +1347,14 @@ class Repurpose(nn.Sequential):
     def learn(self, train_loader, valid_loader, test_loader):
         opt = torch.optim.Adam(self.parameters(), lr = self.lr, weight_decay = self.weight_decay)
         train_loss_record = [] 
-        valid_loss = self.test(valid_loader, return_loss=True)
+        drug2embedding = self._update_drug2embedding(train_loader)
+        valid_loss = self.test(drug2embedding, valid_loader, return_loss=True)
         valid_loss_record = [valid_loss]
         best_valid_loss = valid_loss
         best_model = deepcopy(self)
         for ep in tqdm(range(self.epoch)):
             for batch_idx, (disease_term_embed, icdcode, drug_term_embed, smiless, disease_term, drug_term, _) in enumerate(tqdm(train_loader)):
                 # label_vec = label_vec.to(self.device)
-                print(smiless)
                 output = self.forward(smiless, icdcode, drug_term_embed, disease_term_embed)#### 32, 1 -> 32, ||  label_vec 32,
                 output = output.view(-1)  
                 loss = self.loss(output, torch.ones_like(output))
@@ -1362,8 +1363,8 @@ class Repurpose(nn.Sequential):
                 loss.backward() 
                 opt.step()
 
-            self._update_drug2embedding(train_loader)
-            valid_loss = self.test(valid_loader, return_loss=True)
+            drug2embedding = self._update_drug2embedding(train_loader)
+            valid_loss = self.test(drug2embedding, valid_loader, return_loss=True)
             valid_loss_record.append(valid_loss)
             if valid_loss < best_valid_loss:
                 best_valid_loss = valid_loss 
@@ -1371,14 +1372,17 @@ class Repurpose(nn.Sequential):
 
         self.plot_learning_curve(train_loss_record, valid_loss_record)
         self = deepcopy(best_model)
-        results_lst = self.test(test_loader, return_loss = False, validloader = valid_loader)
+        results_lst = self.test(drug2embedding, test_loader, return_loss = False, validloader = valid_loader)
+        return drug2embedding
 
     def _update_drug2embedding(self, train_loader):
-        for batch_idx, (disease_term_embed, icdcode, drug_term_embed, smiless, disease_term, drug_term, _) in enumerate(tqdm(train_loader)):
-            drug_term_embed = drug_term_embed.to(self.device).float()
+        drug2embedding = {}
+        for batch_idx, (disease_term_embed, icdcode, drug_term_embed, smiless, disease_term, drug_term, _) in enumerate(train_loader):
             drug_embeddings = self.forward_get_drug(smiless, drug_term_embed)
             for i in range(len(drug_term)):
-                self.drug2embedding[drug_term[i]] = drug_embeddings[i].detach()
+                drug2embedding[drug_term[i]] = drug_embeddings[i].detach().clone()
+            
+        return drug2embedding
 
     def plot_learning_curve(self, train_loss_record, valid_loss_record):
         plt.plot(train_loss_record)
