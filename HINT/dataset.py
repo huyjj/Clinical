@@ -103,10 +103,10 @@ def quantile_transform(X_train, X_valid, X_test):
 
 def mortality_rate(phase):
     target = 'mortality_rate'
-    X_train = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/adverse-event-rate-prediction/mortality_rate_train_x.csv')
-    y_train = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/adverse-event-rate-prediction/mortality_rate_train_y.csv')[['mortality_rate', 'Y/N']]
-    X_test = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/adverse-event-rate-prediction/mortality_rate_test_x.csv')
-    y_test = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/adverse-event-rate-prediction/mortality_rate_test_y.csv')[['mortality_rate', 'Y/N']]
+    X_train = pd.read_csv('../adverse-event-rate-prediction/mortality_rate_train_x.csv')
+    y_train = pd.read_csv('../adverse-event-rate-prediction/mortality_rate_train_y.csv')[['mortality_rate', 'Y/N']]
+    X_test = pd.read_csv('../adverse-event-rate-prediction/mortality_rate_test_x.csv')
+    y_test = pd.read_csv('../adverse-event-rate-prediction/mortality_rate_test_y.csv')[['mortality_rate', 'Y/N']]
 
     if phase is not None:
         X_train = X_train[X_train['phase'] == phase]
@@ -221,10 +221,10 @@ def mortality_rate(phase):
 
 def mortality_rate_yn(phase):
     target = 'mortality_rate'
-    X_train = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/adverse-event-rate-prediction/mortality_rate_train_x.csv')
-    y_train = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/adverse-event-rate-prediction/mortality_rate_train_y.csv')['Y/N']
-    X_test = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/adverse-event-rate-prediction/mortality_rate_test_x.csv')
-    y_test = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/adverse-event-rate-prediction/mortality_rate_test_y.csv')['Y/N']
+    X_train = pd.read_csv('../adverse-event-rate-prediction/mortality_rate_train_x.csv')
+    y_train = pd.read_csv('../adverse-event-rate-prediction/mortality_rate_train_y.csv')['Y/N']
+    X_test = pd.read_csv('../adverse-event-rate-prediction/mortality_rate_test_x.csv')
+    y_test = pd.read_csv('../adverse-event-rate-prediction/mortality_rate_test_y.csv')['Y/N']
 
     if phase is not None:
         X_train = X_train[X_train['phase'] == phase]
@@ -334,10 +334,10 @@ def mortality_rate_yn(phase):
 def serious_adverse_rate(phase):
     
     target = 'serious_adverse_rate'
-    X_train = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/adverse-event-rate-prediction/serious_adverse_rate_train_x.csv')
-    y_train = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/adverse-event-rate-prediction/serious_adverse_rate_train_y.csv')[['serious_adverse_rate', 'Y/N']]
-    X_test = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/adverse-event-rate-prediction/serious_adverse_rate_test_x.csv')
-    y_test = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/adverse-event-rate-prediction/serious_adverse_rate_test_y.csv')[['serious_adverse_rate', 'Y/N']]
+    X_train = pd.read_csv('../adverse-event-rate-prediction/serious_adverse_rate_train_x.csv')
+    y_train = pd.read_csv('../adverse-event-rate-prediction/serious_adverse_rate_train_y.csv')[['serious_adverse_rate', 'Y/N']]
+    X_test = pd.read_csv('../adverse-event-rate-prediction/serious_adverse_rate_test_x.csv')
+    y_test = pd.read_csv('../adverse-event-rate-prediction/serious_adverse_rate_test_y.csv')[['serious_adverse_rate', 'Y/N']]
     
     if 'nctid' not in X_train.columns:
         X_train.rename(columns={'ntcid': 'nctid'}, inplace=True)
@@ -456,10 +456,10 @@ def serious_adverse_rate(phase):
 
 def serious_adverse_rate_yn(phase):
     target = 'serious_adverse_rate'
-    X_train = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/adverse-event-rate-prediction/serious_adverse_rate_train_x.csv')
-    y_train = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/adverse-event-rate-prediction/serious_adverse_rate_train_y.csv')['Y/N']
-    X_test = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/adverse-event-rate-prediction/serious_adverse_rate_test_x.csv')
-    y_test = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/adverse-event-rate-prediction/serious_adverse_rate_test_y.csv')['Y/N']
+    X_train = pd.read_csv('../adverse-event-rate-prediction/serious_adverse_rate_train_x.csv')
+    y_train = pd.read_csv('../adverse-event-rate-prediction/serious_adverse_rate_train_y.csv')['Y/N']
+    X_test = pd.read_csv('../adverse-event-rate-prediction/serious_adverse_rate_test_x.csv')
+    y_test = pd.read_csv('../adverse-event-rate-prediction/serious_adverse_rate_test_y.csv')['Y/N']
     
     if 'nctid' not in X_train.columns:
         X_train.rename(columns={'ntcid': 'nctid'}, inplace=True)
@@ -571,10 +571,10 @@ def serious_adverse_rate_yn(phase):
 
 def patient_dropout_rate(phase):
     target = 'patient_dropout_rate'
-    X_train = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/patient-dropout-prediction/train_x.csv')
-    y_train = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/patient-dropout-prediction/train_y.csv')[['droupout_rate', 'Y/N']]
-    X_test = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/patient-dropout-prediction/test_x.csv')
-    y_test = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/patient-dropout-prediction/test_y.csv')[['droupout_rate', 'Y/N']]
+    X_train = pd.read_csv('../patient-dropout-prediction/train_x.csv')
+    y_train = pd.read_csv('../patient-dropout-prediction/train_y.csv')[['droupout_rate', 'Y/N']]
+    X_test = pd.read_csv('../patient-dropout-prediction/test_x.csv')
+    y_test = pd.read_csv('../patient-dropout-prediction/test_y.csv')[['droupout_rate', 'Y/N']]
     
     if 'nctid' not in X_train.columns:
         X_train.rename(columns={'ntcid': 'nctid'}, inplace=True)
@@ -693,10 +693,10 @@ def patient_dropout_rate(phase):
 
 def patient_dropout_rate_yn(phase):
     target = 'patient_dropout_rate'
-    X_train = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/patient-dropout-prediction/train_x.csv')
-    y_train = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/patient-dropout-prediction/train_y.csv')['Y/N']
-    X_test = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/patient-dropout-prediction/test_x.csv')
-    y_test = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/patient-dropout-prediction/test_y.csv')['Y/N']
+    X_train = pd.read_csv('../patient-dropout-prediction/train_x.csv')
+    y_train = pd.read_csv('../patient-dropout-prediction/train_y.csv')['Y/N']
+    X_test = pd.read_csv('../patient-dropout-prediction/test_x.csv')
+    y_test = pd.read_csv('../patient-dropout-prediction/test_y.csv')['Y/N']
     
     if 'nctid' not in X_train.columns:
         X_train.rename(columns={'ntcid': 'nctid'}, inplace=True)
@@ -809,10 +809,10 @@ def patient_dropout_rate_yn(phase):
 
 
 def duration(phase):
-    X_train = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/trial-duration-prediction/train_x_2022.csv')
-    y_train = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/trial-duration-prediction/train_y_2022.csv')['time_day']
-    X_test = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/trial-duration-prediction/test_x_2022.csv')
-    y_test = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/trial-duration-prediction/test_y_2022.csv')['time_day']
+    X_train = pd.read_csv('../trial-duration-prediction/train_x_2022.csv')
+    y_train = pd.read_csv('../trial-duration-prediction/train_y_2022.csv')['time_day']
+    X_test = pd.read_csv('../trial-duration-prediction/test_x_2022.csv')
+    y_test = pd.read_csv('../trial-duration-prediction/test_y_2022.csv')['time_day']
     if 'nctid' not in X_train.columns:
         X_train.rename(columns={'ntcid': 'nctid'}, inplace=True)
         X_test.rename(columns={'ntcid': 'nctid'}, inplace=True)
@@ -931,10 +931,10 @@ def duration(phase):
 
 def outcome(phase):
     target = 'outcome'
-    X_train = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/trial-approval-prediction/train_x.csv')
-    y_train = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/trial-approval-prediction/train_y.csv')['outcome']
-    X_test = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/trial-approval-prediction/test_x.csv')
-    y_test = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/trial-approval-prediction/test_y.csv')['outcome']
+    X_train = pd.read_csv('../trial-approval-prediction/train_x.csv')
+    y_train = pd.read_csv('../trial-approval-prediction/train_y.csv')['outcome']
+    X_test = pd.read_csv('../trial-approval-prediction/test_x.csv')
+    y_test = pd.read_csv('../trial-approval-prediction/test_y.csv')['outcome']
     
     if 'nctid' not in X_train.columns:
         X_train.rename(columns={'ntcid': 'nctid'}, inplace=True)
@@ -1055,10 +1055,10 @@ def failure_reason(phase):
         elif x == 'Others':
             return 3
     target = 'failure_reason'
-    X_train = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/trial-failure-reason-prediction/train_x.csv')
-    y_train = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/trial-failure-reason-prediction/train_y.csv')['failure_reason'].apply(mapper)
-    X_test = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/trial-failure-reason-prediction/test_x.csv')
-    y_test = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/trial-failure-reason-prediction/test_y.csv')['failure_reason'].apply(mapper)
+    X_train = pd.read_csv('../trial-failure-reason-prediction/train_x.csv')
+    y_train = pd.read_csv('../trial-failure-reason-prediction/train_y.csv')['failure_reason'].apply(mapper)
+    X_test = pd.read_csv('../trial-failure-reason-prediction/test_x.csv')
+    y_test = pd.read_csv('../trial-failure-reason-prediction/test_y.csv')['failure_reason'].apply(mapper)
     
     if 'nctid' not in X_train.columns:
         X_train.rename(columns={'ntcid': 'nctid'}, inplace=True)
@@ -1190,10 +1190,10 @@ class Dose_dataset(Dataset):
 #     return [nctid_lst, label_vec, smiles_lst, mesh_lst]
 
 def dose(phase):
-    X_train = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/drug-dose-prediction/train_x.csv')
-    y_train = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/drug-dose-prediction/train_y.csv')[['Max','Min']]
-    X_test = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/drug-dose-prediction/test_x.csv')
-    y_test = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/drug-dose-prediction/test_y.csv')[['Max','Min']]
+    X_train = pd.read_csv('../drug-dose-prediction/train_x.csv')
+    y_train = pd.read_csv('../drug-dose-prediction/train_y.csv')[['Max','Min']]
+    X_test = pd.read_csv('../drug-dose-prediction/test_x.csv')
+    y_test = pd.read_csv('../drug-dose-prediction/test_y.csv')[['Max','Min']]
     
     if 'nctid' not in X_train.columns:
         X_train.rename(columns={'ntcid': 'nctid'}, inplace=True)
@@ -1240,10 +1240,10 @@ def dose(phase):
 
 
 def dose_cls(phase):
-    X_train = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/drug-dose-prediction/train_x.csv')
-    y_train = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/drug-dose-prediction/train_y_cls.csv')['Avg']
-    X_test = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/drug-dose-prediction/test_x.csv')
-    y_test = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/drug-dose-prediction/test_y_cls.csv')['Avg']
+    X_train = pd.read_csv('../drug-dose-prediction/train_x.csv')
+    y_train = pd.read_csv('../drug-dose-prediction/train_y_cls.csv')['Avg']
+    X_test = pd.read_csv('../drug-dose-prediction/test_x.csv')
+    y_test = pd.read_csv('../drug-dose-prediction/test_y_cls.csv')['Avg']
     
     if 'nctid' not in X_train.columns:
         X_train.rename(columns={'ntcid': 'nctid'}, inplace=True)
@@ -1314,10 +1314,10 @@ def Repurpose_collate_fn(x):
     return [disease_term_embed, icdcode, drug_term_embed, smiless, disease_term, drug_term, label]
 
 def repurposing():
-    train_part = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/drug-repurposing/train_part.csv', index_col=0)
-    X_test = pd.read_csv('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/drug-repurposing/test_2018.csv', index_col=0)
+    train_part = pd.read_csv('../drug-repurposing/train_part.csv', index_col=0)
+    X_test = pd.read_csv('../drug-repurposing/test_2018.csv', index_col=0)
     import json
-    with open('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/drug-repurposing/drug_mesh_term2smiless.json', 'r') as f:
+    with open('../drug-repurposing/drug_mesh_term2smiless.json', 'r') as f:
         drug_mesh_term2smiless = json.load(f)
     
     def smiless2(x):
