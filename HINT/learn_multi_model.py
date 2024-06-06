@@ -1,11 +1,4 @@
 ## 1. import 
-## 2. input & hyperparameter
-## 3. pretrain 
-## 4. 'dataloader, model build, train, inference'
-################################################
-
-
-## 1. import 
 import torch, os, sys
 torch.manual_seed(0) 
 sys.path.append('.')
@@ -17,7 +10,6 @@ from HINT.protocol_encode import Protocol_Embedding
 from HINT.tabular_encode import DANet
 from HINT.text_encode import Text_Embedding
 from HINT.mesh_encode import Mesh_Embedding
-from HINT.model import Interaction, HINT_nograph, HINTModel
 from HINT.model_multi import Multi_nograph, Dose, Multi_2_head, Repurpose
 device = torch.device("cpu")
 
@@ -25,7 +17,7 @@ device = torch.device("cpu")
 import argparse
 
 parser = argparse.ArgumentParser(description='HINT')
-parser.add_argument('--base_name', type=str, default='outcome')
+parser.add_argument('--base_name', type=str, default='repurposing')
 parser.add_argument('--phase', type=str, default="")
 parser.add_argument('--exp', type=str, default='')
 args = parser.parse_args()
@@ -91,8 +83,9 @@ def get_mpnn_model(device):
 	return mpnn_model, admet_model
 
 hint_model_path = base_name + "save_model" + ".ckpt"
-# if not os.path.exists(hint_model_path):
-if 'repur' in base_name:
+
+if 'repurposing' in base_name:
+	# For repurposing model
 	icdcode2ancestor_dict = build_icdcode2ancestor_dict()
 	gram_model = GRAM(embedding_dim = 50, icdcode2ancestor = icdcode2ancestor_dict, device = device)
 	mesh_model = Mesh_Embedding(output_dim = 50, highway_num=3, device = device)
@@ -101,14 +94,16 @@ if 'repur' in base_name:
 				device=device, 
 				global_embed_size=50, 
 				highway_num_layer=2, prefix_name=base_name, 
-				epoch=2, lr=1e-3, weight_decay=0)
+				epoch=20, lr=1e-3, weight_decay=0)
 
 	model.init_pretrain(admet_model)
-	model.learn(train_loader, valid_loader, test_loader)
-	model.bootstrap_test(test_loader)
+	drug2embedding = model.learn(train_loader, valid_loader, test_loader)
+	model.bootstrap_test(drug2embedding, test_loader)
 	torch.save(model, hint_model_path)
+	torch.save(drug2embedding, base_name + "drug2embedding" + ".pt")
 
 elif 'dose' not in base_name and 'two' not in args.exp:
+	# For classifier and regression model
 	icdcode2ancestor_dict = build_icdcode2ancestor_dict()
 	gram_model = GRAM(embedding_dim = 50, icdcode2ancestor = icdcode2ancestor_dict, device = device)
 	protocol_model = Protocol_Embedding(output_dim = 50, highway_num=3, device = device)
@@ -139,6 +134,7 @@ elif 'dose' not in base_name and 'two' not in args.exp:
 	torch.save(model, hint_model_path)
 
 elif 'dose' in base_name:
+	# For Dose model
 	mesh_model = Mesh_Embedding(output_dim = 50, highway_num=3, device = device)
 	mpnn_model, admet_model = get_mpnn_model(device)
 	model = Dose(molecule_encoder=mpnn_model, mesh_encoder=mesh_model, device=device, 
@@ -146,15 +142,16 @@ elif 'dose' in base_name:
 				highway_num_layer=2, prefix_name=base_name, 
 				epoch=40, lr=1e-3, weight_decay=0)
 
-	model = torch.load('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/logs/dose_cls/cindexallsave_model.ckpt')
-	model.bootstrap_test(test_loader)
-
-	# model.init_pretrain(admet_model)
-	# model.learn(train_loader, valid_loader, test_loader)
+	# model = torch.load('/data3/huyaojun/DrugTrail/clinical-trial-outcome-prediction/Clinical-Trail/logs/dose_cls/cindexallsave_model.ckpt')
 	# model.bootstrap_test(test_loader)
-	# torch.save(model, hint_model_path)
+
+	model.init_pretrain(admet_model)
+	model.learn(train_loader, valid_loader, test_loader)
+	model.bootstrap_test(test_loader)
+	torch.save(model, hint_model_path)
 
 elif 'two' in args.exp:
+	# For Two-Head model
 	print(args.exp)
 	icdcode2ancestor_dict = build_icdcode2ancestor_dict()
 	gram_model = GRAM(embedding_dim = 50, icdcode2ancestor = icdcode2ancestor_dict, device = device)
