@@ -16,3 +16,23 @@ unigram_redundancy         0.435379
 bigram_redundancy          0.080548
 trigram_redundancy         0.000099
 conciseness_score          0.003313
+
+Standard Deviation Values:
+ rouge-1_f                  0.079152
+rouge-1_p                  0.121445
+rouge-1_r                  0.145932
+rouge-2_f                  0.054688
+rouge-2_p                  0.066634
+rouge-2_r                  0.087777
+rouge-l_f                  0.063167
+rouge-l_p                  0.101296
+rouge-l_r                  0.122860
+cosine_similarity          0.061522
+informativeness            0.149944
+unigram_repetition_rate    0.028755
+bigram_repetition_rate     0.024924
+trigram_repetition_rate    0.000802
+unigram_redundancy         0.128566
+bigram_redundancy          0.060533
+trigram_redundancy         0.001608
+conciseness_score          0.002744
